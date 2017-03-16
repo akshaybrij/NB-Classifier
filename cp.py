@@ -1,6 +1,7 @@
 import nltk
 import random
 import pyttsx
+import pickle
 from nltk.corpus import movie_reviews
 from sklearn.naive_bayes import MultinomialNB,BernoulliNB
 from nltk.classify.scikitlearn import SklearnClassifier
@@ -28,7 +29,7 @@ def find_features(document):
     features = {}
     for w in word_features:
          features[w] = (w in words)
-        
+
 
     return features
 #print((find_features(movie_reviews.words('neg/cv000_29416.txt'))))
@@ -42,11 +43,13 @@ featuresets = [(find_features(rev), category) for (rev, category) in documents]
 #print featuresets[:300]
 training_set=featuresets[:1900]
 test=featuresets[1900:]
-classifier=nltk.NaiveBayesClassifier.train(training_set)
-
+'''classifier=nltk.NaiveBayesClassifier.train(training_set)
+clasfr=open('NB.pickle','wb')
+pickle.dump(classifier,clasfr)'''
+clasfr=open('NB.pickle','rb')
+classifier=pickle.load(clasfr)
 MNC=SklearnClassifier(MultinomialNB())
 MNC.train(training_set)
 print "Accc:", nltk.classify.accuracy(classifier,test)
 print classifier.show_most_informative_features(25)
 print "Accc:", (nltk.classify.accuracy(MNC,test)*100)
- 
